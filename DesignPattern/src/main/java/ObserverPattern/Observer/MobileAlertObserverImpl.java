@@ -6,7 +6,7 @@ public class MobileAlertObserverImpl implements NotificationAlertObserver{
     String username;
     StockObservable stockObservable;
 
-    public MobileAlertObserverImpl(StockObservable stockObservable, String username)
+    public MobileAlertObserverImpl(String username, StockObservable stockObservable)
     {
         this.stockObservable = stockObservable;
         this.username = username;
