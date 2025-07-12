@@ -1,2 +1,5 @@
-package StrategyPattern.withStrategyPattern.Strategy;public class DriveStrategy {
+package StrategyPattern.withStrategyPattern.Strategy;
+
+public interface DriveStrategy {
+    public void drive();
 }

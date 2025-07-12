@@ -1,2 +1,4 @@
-package StrategyPattern.withoutStrategyPattern;public class PassangerVehicle {
+package StrategyPattern.withoutStrategyPattern;
+
+public class PassangerVehicle extends Vehicle{
 }
