@@ -1,0 +1,43 @@
+
+public class Solution {
+    // Map to store the index of each value in the inorder traversal for quick lookup
+    private HashMap<Integer, Integer> inorderMap;
+
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        if (preorder == null || inorder == null || preorder.length != inorder.length) {
+            return null;
+        }
+
+        // Initialize the map for quick index lookup
+        inorderMap = new HashMap<>();
+        for (int i = 0; i < inorder.length; i++) {
+            inorderMap.put(inorder[i], i);
+        }
+
+        // Call the helper function to build the tree
+        return buildTreeHelper(preorder, 0, preorder.length - 1, 0, inorder.length - 1);
+    }
+
+    private TreeNode buildTreeHelper(int[] preorder, int preStart, int preEnd, int inStart, int inEnd) {
+        // Base case: if the indices are invalid
+        if (preStart > preEnd || inStart > inEnd) {
+            return null;
+        }
+
+        // The root of the current subtree is the first element in the current preorder segment
+        int rootValue = preorder[preStart];
+        TreeNode root = new TreeNode(rootValue);
+
+        // Get the index of the root value in the inorder array
+        int rootIndexInInorder = inorderMap.get(rootValue);
+
+        // Calculate the size of the left subtree
+        int leftTreeSize = rootIndexInInorder - inStart;
+
+        // Recursively build the left and right subtrees
+        root.left = buildTreeHelper(preorder, preStart + 1, preStart + leftTreeSize, inStart, rootIndexInInorder - 1);
+        root.right = buildTreeHelper(preorder, preStart + leftTreeSize + 1, preEnd, rootIndexInInorder + 1, inEnd);
+
+        return root;
+    }
+ }

@@ -1,0 +1,51 @@
+import java.util.*;
+
+public class Solution {
+    public double maxProbability(int n, int[][] edges, double[] succProb, int start, int end) {
+        // Create the graph as an adjacency list with probabilities
+        Map<Integer, List<double[]>> graph = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            graph.put(i, new ArrayList<>());
+        }
+        for (int i = 0; i < edges.length; i++) {
+            int u = edges[i][0];
+            int v = edges[i][1];
+            double prob = succProb[i];
+            graph.get(u).add(new double[]{v, prob});
+            graph.get(v).add(new double[]{u, prob});
+        }
+
+        // Use a priority queue to store nodes, sorted by maximum probability (max heap)
+        PriorityQueue<double[]> pq = new PriorityQueue<>((a, b) -> Double.compare(b[1], a[1]));
+        double[] probabilities = new double[n]; // Store max probability to each node
+        probabilities[start] = 1.0;
+        pq.offer(new double[]{start, 1.0}); // Start with the starting node
+
+        while (!pq.isEmpty()) {
+            double[] curr = pq.poll();
+            int currNode = (int) curr[0];
+            double currProb = curr[1];
+
+            // If we reach the destination node, return its probability
+            if (currNode == end) {
+                return currProb;
+            }
+
+            // Traverse neighbors
+            for (double[] neighbor : graph.get(currNode)) {
+                int nextNode = (int) neighbor[0];
+                double edgeProb = neighbor[1];
+                double newProb = currProb * edgeProb;
+
+                // Update the probability if it's greater than the current stored probability
+                if (newProb > probabilities[nextNode]) {
+                    probabilities[nextNode] = newProb;
+                    pq.offer(new double[]{nextNode, newProb});
+                }
+            }
+        }
+
+        // If we can't reach the destination, return 0
+        return 0.0;
+    }
+}

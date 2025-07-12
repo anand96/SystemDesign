@@ -1,0 +1,56 @@
+create Adj
+
+start point 1 neighbour
+
+run dfs at that point
+
+have previous
+*/
+import java.util.*;
+
+class Solution {
+    int[] result;
+    int index = 0; // Index to track position in result array
+
+    public void dfs(int u, int prev, HashMap<Integer, List<Integer>> adjList) {
+        result[index++] = u; // Store the current element
+
+        for (int neighbor : adjList.get(u)) {
+            if (neighbor != prev) { // Ensure we don't revisit the parent
+                dfs(neighbor, u, adjList);
+            }
+        }
+    }
+
+    public int[] restoreArray(int[][] adjacentPairs) {
+        int n = adjacentPairs.length;
+        result = new int[n + 1]; // Restored array has n+1 elements
+        HashMap<Integer, List<Integer>> adjList = new HashMap<>();
+
+        // Build adjacency list
+        for (int i = 0; i < n; i++) {
+            int u = adjacentPairs[i][0];
+            int v = adjacentPairs[i][1];
+
+            adjList.putIfAbsent(u, new ArrayList<>());
+            adjList.putIfAbsent(v, new ArrayList<>());
+
+            adjList.get(u).add(v);
+            adjList.get(v).add(u);
+        }
+
+        // Find starting point (an element with only one neighbor)
+        int startPoint = -1;
+        for (Map.Entry<Integer, List<Integer>> entry : adjList.entrySet()) {
+            if (entry.getValue().size() == 1) { // Endpoint of original array
+                startPoint = entry.getKey();
+                break;
+            }
+        }
+
+        // Perform DFS traversal to reconstruct the array
+        dfs(startPoint, Integer.MIN_VALUE, adjList);
+
+        return result;
+    }
+}

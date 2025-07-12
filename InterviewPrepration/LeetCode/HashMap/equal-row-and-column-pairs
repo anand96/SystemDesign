@@ -1,0 +1,66 @@
+//My Approch
+
+// class Solution {
+//     public int equalPairs(int[][] grid) {
+//         int n =grid.length;
+//         int row_value;
+//         int col_value, pow;
+//         HashMap<Integer, Integer> rows= new HashMap<>();
+//         HashMap<Integer, Integer> cols= new HashMap<>();
+
+//         for(int i=0;i<n;i++)
+//         {
+//             row_value=0;
+//             col_value=0;
+//             pow =1;
+//             for(int j=0;j<n;j++)
+//             {
+//                 row_value = row_value + grid[i][j] * pow;
+//                 col_value = col_value + grid[j][i] * pow;
+//                 pow =pow*10;
+//             }
+//             System.out.println(row_value+" "+col_value);
+//             rows.put(i, row_value);
+//             cols.put(i, col_value);
+//         }
+//         int count =0;
+//         for (Map.Entry<Integer, Integer> entry1 : rows.entrySet()) {
+//             for (Map.Entry<Integer, Integer> entry2 : cols.entrySet()) {
+//                 if (entry2.getValue().equals(entry1.getValue())) // Use .equals() for Integer comparison
+//                 count++;
+//             }
+//         }
+//         return count;
+//     }
+// }
+
+
+
+class Solution {
+    public int equalPairs(int[][] grid) {
+        Map<List<Integer>, Integer> map = new HashMap<>();
+        int n = grid.length;
+
+        // Store rows in the map
+        for (int i = 0; i < n; i++) {
+            List<Integer> rowList = new ArrayList<>();
+            for (int j = 0; j < n; j++) {
+                rowList.add(grid[i][j]);  // Convert row to List<Integer>
+            }
+            map.put(rowList, map.getOrDefault(rowList, 0) + 1);
+        }
+
+        int count = 0;
+
+        // Extract and compare columns
+        for (int j = 0; j < n; j++) {
+            List<Integer> colList = new ArrayList<>();
+            for (int i = 0; i < n; i++) {
+                colList.add(grid[i][j]);  // Correct column extraction
+            }
+            count += map.getOrDefault(colList, 0);  // Lookup column in row map
+        }
+
+        return count;
+    }
+}

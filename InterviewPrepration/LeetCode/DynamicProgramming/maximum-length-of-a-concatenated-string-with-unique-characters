@@ -1,0 +1,149 @@
+class Solution{
+
+    boolean hasDuplicate(String s1, String s2){
+        int alpha[] = new int[26];
+
+        for(char c : s1.toCharArray()){
+            if(alpha[c-'a']>0)
+                return true;
+            alpha[c-'a']++;
+        }
+
+        for(char c : s2.toCharArray())
+        {
+            if(alpha[c-'a']>0)
+               return true;
+        }
+        return false;
+    }
+
+    public int maxLength(List<String> arr){
+        int n = arr.size();
+        map = new HashMap<>();
+        return solve(arr, 0,n, "");
+    }
+
+    int solve(List<String> arr,int i, int n, String temp){
+        if(i>=n)
+        return temp.length();
+
+        int exclude =0;
+        int include =0;
+
+        if(hasDuplicate(arr.get(i), temp))
+        {
+             exclude = solve(arr, i+1, n, temp);
+        }
+        else{
+            exclude = solve(arr, i+1, n, temp);
+            include = solve(arr, i+1, n, temp+arr.get(i));
+        }
+
+        return Math.max(include, exclude);
+    }
+}
+
+
+
+Memoization code
+// class Solution{
+
+//     boolean hasDuplicate(String s1, String s2){
+//         int alpha[] = new int[26];
+
+//         for(char c : s1.toCharArray()){
+//             if(alpha[c-'a']>0)
+//                 return true;
+//             alpha[c-'a']++;
+//         }
+
+//         for(char c : s2.toCharArray())
+//         {
+//             if(alpha[c-'a']>0)
+//                return true;
+//         }
+//         return false;
+//     }
+
+//     public int maxLength(List<String> arr){
+//         int n = arr.size();
+//         return solve(arr, 0,n, "");
+//     }
+
+//     int solve(List<String> arr,int i, int n, String temp){
+//         if(i>=n)
+//         return temp.length();
+
+//         int exclude =0;
+//         int include =0;
+
+//         if(hasDuplicate(arr.get(i), temp))
+//         {
+//              exclude = solve(arr, i+1, n, temp);
+//         }
+//         else{
+//             exclude = solve(arr, i+1, n, temp);
+//             include = solve(arr, i+1, n, temp+arr.get(i));
+//         }
+
+//         return Math.max(include, exclude);
+//     }
+// }
+class Solution {
+
+    Map<String, Integer> memo; // Map to store memoized results
+
+    boolean hasDuplicate(String s1, String s2) {
+        int alpha[] = new int[26];
+
+        for (char c : s1.toCharArray()) {
+            if (alpha[c - 'a'] > 0)
+                return true;
+            alpha[c - 'a']++;
+        }
+
+        for (char c : s2.toCharArray()) {
+            if (alpha[c - 'a'] > 0)
+                return true;
+        }
+        return false;
+    }
+
+    public int maxLength(List<String> arr) {
+        int n = arr.size();
+        memo = new HashMap<>(); // Initialize the memo map
+        return solve(arr, 0, n, "");
+    }
+
+    int solve(List<String> arr, int i, int n, String temp) {
+        // Create a unique key for the current state
+        String key = i + "|" + temp;
+
+        // Check if the result is already memoized
+        if (memo.containsKey(key)) {
+            return memo.get(key);
+        }
+
+        if (i >= n) {
+            return temp.length();
+        }
+
+        int exclude = 0;
+        int include = 0;
+
+        if (hasDuplicate(arr.get(i), temp)) {
+            exclude = solve(arr, i + 1, n, temp);
+        } else {
+            exclude = solve(arr, i + 1, n, temp);
+            include = solve(arr, i + 1, n, temp + arr.get(i));
+        }
+
+        int result = Math.max(include, exclude);
+
+        // Memoize the result for the current state
+        memo.put(key, result);
+
+        return result;
+    }
+}
+

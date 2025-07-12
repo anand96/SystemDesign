@@ -1,0 +1,26 @@
+class Solution{
+    public int compress(char[] chars){
+
+        int l = chars.length;
+        int index =0;
+        int i =0;
+        while(i<l)
+        {
+            char curr_char = chars[i];
+            int count =0;
+            while(i<l && chars[i] == curr_char)
+            {
+                i++;
+                count++;
+            }
+
+            chars[index++] = curr_char;
+             if (count > 1) {
+                for (char c : String.valueOf(count).toCharArray()) {
+                     chars[index++] = c;
+                }
+             }
+        }
+        return index;
+    }
+}

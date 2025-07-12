@@ -1,0 +1,110 @@
+class Solution {
+    public String findOrder(String[] words) {
+        Map<Character, Set<Character>> graph = new HashMap<>();
+        Map<Character, Integer> inDegree = new HashMap<>();
+
+        //Initialize graph nodes
+        for(String word : words)
+        {
+            for(char c : word.toCharArray())
+            {
+                graph.putIfAbsent(c, new HashSet<>());
+                inDegree.putIfAbsent(c, 0);
+            }
+        }
+        //Build the graph (edges and in-degree)
+        for(int i =0;i<words.length -1;i++)
+        {
+            String word1 = words[i], word2 = words[i+1];
+
+            if(word1.length()>word2.length() && word1.startsWith(word2))
+                return "";
+
+            for(int j=0;j< Math.min(word1.length(), word2.length());j++)
+            {
+                char first = word1.charAt(j), second = word2.charAt(j);
+                if(first!=second)
+                {
+                    if(!graph.get(first).contains(second)){
+                        graph.get(first).add(second);
+                        inDegree.put(second, inDegree.get(second)+1);
+                    }
+                    break;
+                }
+            }
+        }
+
+        Queue<Character> queue = new LinkedList<>();
+
+        for(char c : inDegree.keySet())
+        {
+            if(inDegree.get(c)==0)
+            {
+                queue.add(c);
+            }
+        }
+
+        StringBuilder order = new StringBuilder();
+        while(!queue.isEmpty())
+        {
+            char c= queue.poll();
+            order.append(c);
+            for(char neighbor : graph.get(c))
+            {
+                inDegree.put(neighbor, inDegree.get(neighbor)-1);
+                if(inDegree.get(neighbor)==0)
+                {
+                    queue.add(neighbor);
+                }
+            }
+        }
+        return order.length() == graph.size() ? order.toString() : "";
+    }
+}
+
+//{ Driver Code Starts.
+
+public class GFG {
+    private static boolean validate(String[] original, String order) {
+        Map<Character, Integer> mp = new HashMap<>();
+        for (String word : original) {
+            for (char ch : word.toCharArray()) {
+                mp.put(ch, 1);
+            }
+        }
+        for (char ch : order.toCharArray()) {
+            if (!mp.containsKey(ch)) {
+                return false;
+            }
+            mp.remove(ch);
+        }
+        if (!mp.isEmpty()) {
+            return false;
+        }
+
+        Map<Character, Integer> indexMap = new HashMap<>();
+        for (int i = 0; i < order.length(); i++) {
+            indexMap.put(order.charAt(i), i);
+        }
+
+        for (int i = 0; i < original.length - 1; i++) {
+            String a = original[i];
+            String b = original[i + 1];
+            int k = 0, n = a.length(), m = b.length();
+
+            while (k < n && k < m && a.charAt(k) == b.charAt(k)) {
+                k++;
+            }
+
+            if (k < n && k < m &&
+                indexMap.get(a.charAt(k)) > indexMap.get(b.charAt(k))) {
+                return false;
+            }
+            if (k != n && k == m) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+}

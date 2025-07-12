@@ -1,0 +1,4 @@
+//multi source bfs ensures that all nodes are reached with minimal distace / time
+//from nearest source.
+
+

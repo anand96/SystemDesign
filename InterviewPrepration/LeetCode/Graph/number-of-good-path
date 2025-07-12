@@ -1,0 +1,80 @@
+import java.util.*;
+
+public class GoodPaths {
+
+    public static int numberOfGoodPaths(int[] vals, int[][] edges) {
+        int n = vals.length;
+        // Group nodes by their values
+        TreeMap<Integer, List<Integer>> valueToNodes = new TreeMap<>();
+        for (int i = 0; i < n; i++) {
+            valueToNodes.computeIfAbsent(vals[i], v -> new ArrayList<>()).add(i);
+        }
+
+        // Build the adjacency list for the tree
+        List<Integer>[] graph = new ArrayList[n];
+        for (int i = 0; i < n; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        for (int[] edge : edges) {
+            graph[edge[0]].add(edge[1]);
+            graph[edge[1]].add(edge[0]);
+        }
+
+        // Union-Find to group connected nodes with the same values
+        int[] parent = new int[n];
+        int[] size = new int[n];
+        for (int i = 0; i < n; i++) {
+            parent[i] = i;
+            size[i] = 1;
+        }
+
+        // Find the root of a node
+        int find(int x) {
+            if (parent[x] != x) {
+                parent[x] = find(parent[x]);
+            }
+            return parent[x];
+        }
+
+        // Union two nodes
+        void union(int x, int y) {
+            int rootX = find(x);
+            int rootY = find(y);
+            if (rootX != rootY) {
+                if (size[rootX] < size[rootY]) {
+                    int temp = rootX;
+                    rootX = rootY;
+                    rootY = temp;
+                }
+                parent[rootY] = rootX;
+                size[rootX] += size[rootY];
+            }
+        }
+
+        // Count good paths
+        int goodPaths = 0;
+        for (int value : valueToNodes.keySet()) {
+            List<Integer> nodes = valueToNodes.get(value);
+            for (int node : nodes) {
+                for (int neighbor : graph[node]) {
+                    if (vals[neighbor] <= value) {
+                        union(node, neighbor);
+                    }
+                }
+            }
+
+            // Count nodes in each connected component
+            Map<Integer, Integer> componentCount = new HashMap<>();
+            for (int node : nodes) {
+                int root = find(node);
+                componentCount.put(root, componentCount.getOrDefault(root, 0) + 1);
+            }
+
+            for (int count : componentCount.values()) {
+                goodPaths += count * (count + 1) / 2;
+            }
+        }
+
+        return goodPaths;
+    }
+}

@@ -1,0 +1,28 @@
+class Solution {
+     // Function to check if a character is a vowel
+    boolean isVowel(char c) {
+        return c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u';
+    }
+
+    public int maxVowels(String s, int k) {
+        int j = 0;
+        int count = 0, ans = 0;
+
+        for (int i = 0; i < s.length(); i++) {
+            if (isVowel(s.charAt(i))) {
+                count++;
+            }
+
+            if (i >= k) { // Shrinking the window when it exceeds k
+                if (isVowel(s.charAt(j))) { // Remove the leftmost character from the window
+                    count--;
+                }
+                j++; // Move the left pointer
+            }
+
+            ans = Math.max(ans, count); // Track the maximum number of vowels
+        }
+
+        return ans;
+    }
+}

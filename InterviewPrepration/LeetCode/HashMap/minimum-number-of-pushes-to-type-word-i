@@ -1,0 +1,90 @@
+Example 1:
+
+
+Input: word = "abcde"
+Output: 5
+Explanation: The remapped keypad given in the image provides the minimum cost.
+"a" -> one push on key 2
+"b" -> one push on key 3
+"c" -> one push on key 4
+"d" -> one push on key 5
+"e" -> one push on key 6
+Total cost is 1 + 1 + 1 + 1 + 1 = 5.
+It can be shown that no other mapping can provide a lower cost.
+Example 2:
+
+
+Input: word = "xycdefghij"
+Output: 12
+Explanation: The remapped keypad given in the image provides the minimum cost.
+"x" -> one push on key 2
+"y" -> two pushes on key 2
+"c" -> one push on key 3
+"d" -> two pushes on key 3
+"e" -> one push on key 4
+"f" -> one push on key 5
+"g" -> one push on key 6
+"h" -> one push on key 7
+"i" -> one push on key 8
+"j" -> one push on key 9
+Total cost is 1 + 2 + 1 + 2 + 1 + 1 + 1 + 1 + 1 + 1 = 12.
+It can be shown that no other mapping can provide a lower cost.
+
+
+
+// class Solution {
+//     public int minimumPushes(String word) {
+//         int result =0;
+//         HashMap<Integer, Integer> map = new HashMap<>();
+//         int assign_key =2;
+//         for(int i=0;i<word.length();i++)
+//         {
+//             if(assign_key>9)
+//             {
+//                 assign_key=2;
+//             }
+//             map.put(assign_key, map.getOrDefault(assign_key,0)+1);
+//             result += map.getOrDefault(assign_key, 0);
+//             assign_key++;
+//         }
+//         return result;
+//     }
+// }
+
+
+
+import java.util.Arrays;
+
+class Solution {
+    public int minimumPushes(String word) {
+        int result = 0;
+        int[] map = new int[26];
+
+        // Count frequency of each letter
+        for (int i = 0; i < word.length(); i++) {
+            char c = word.charAt(i);
+            map[c - 'a']++;
+        }
+
+        // Sort the frequency array in descending order
+        Arrays.sort(map);
+        for (int i = 0, j = 25; i < j; i++, j--) {
+            int temp = map[i];
+            map[i] = map[j];
+            map[j] = temp;
+        }
+
+        // Calculate result based on frequency
+        for (int i = 0; i < 26; i++) {
+            int freq = map[i];
+            if (freq == 0) break; // Stop early if no more characters
+            int press = i / 8 + 1;
+            result += freq * press; // Multiply frequency by press count
+        }
+
+        return result;
+    }
+}
+
+
+

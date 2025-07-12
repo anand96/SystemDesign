@@ -1,0 +1,84 @@
+1. Dijkstra’
+s Algorithm (for graphs with non-negative weights)
+Uses a priority queue (min-heap) to always expand the least-cost node first.
+Time Complexity: O((V + E) log V) using a binary heap.
+2. Bellman-Ford Algorithm (handles negative weights)
+Works by relaxing all edges V-1 times.
+Detects negative weight cycles.
+Time Complexity: O(VE).
+3. Floyd-Warshall Algorithm (for All-Pairs Shortest Path)
+Uses dynamic programming to find shortest paths between every pair.
+Time Complexity: O(V³).
+4. A Algorithm* (for heuristic-based shortest path)
+Uses a heuristic function to guide the search.
+More efficient for pathfinding in large graphs.
+
+
+class Solution {
+    static class Edge {
+        int dest, weight;
+        Edge(int dest, int weight) {
+            this.dest = dest;
+            this.weight = weight;
+        }
+    }
+
+    static class Node implements Comparable<Node> {
+        int vertex, distance;
+        Node(int vertex, int distance) {
+            this.vertex = vertex;
+            this.distance = distance;
+        }
+        public int compareTo(Node other) {
+            return Integer.compare(this.distance, other.distance);
+        }
+    }
+
+    public List<Integer> shortestPath(int n, int m, int[][] edges) {
+        // Graph adjacency list
+        Map<Integer, List<Edge>> graph = new HashMap<>();
+        for (int i = 1; i <= n; i++) graph.put(i, new ArrayList<>());
+        for (int[] edge : edges) {
+            graph.get(edge[0]).add(new Edge(edge[1], edge[2]));
+            graph.get(edge[1]).add(new Edge(edge[0], edge[2])); // Undirected graph
+        }
+
+        // Priority Queue (Min Heap) for Dijkstra
+        PriorityQueue<Node> minHeap = new PriorityQueue<>();
+        int[] dist = new int[n + 1];
+        int[] parent = new int[n + 1];
+        Arrays.fill(dist, Integer.MAX_VALUE);
+        Arrays.fill(parent, -1);
+
+        // Start from node 1
+        dist[1] = 0;
+        minHeap.offer(new Node(1, 0));
+
+        while (!minHeap.isEmpty()) {
+            Node current = minHeap.poll();
+            int u = current.vertex;
+            if (current.distance > dist[u]) continue; // Skip outdated entries
+
+            for (Edge edge : graph.getOrDefault(u, new ArrayList<>())) {
+                int v = edge.dest, weight = edge.weight;
+                if (dist[u] + weight < dist[v]) {
+                    dist[v] = dist[u] + weight;
+                    parent[v] = u;
+                    minHeap.offer(new Node(v, dist[v]));
+                }
+            }
+        }
+
+        // If no path exists
+        if (dist[n] == Integer.MAX_VALUE) return Collections.singletonList(-1);
+
+        // Reconstruct path from `n` to `1`
+        List<Integer> path = new ArrayList<>();
+        for (int v = n; v != -1; v = parent[v]) path.add(v);
+        Collections.reverse(path);
+
+        // Add weight at the beginning of the list
+        path.add(0, dist[n]);
+        return path;
+    }
+}

@@ -1,0 +1,29 @@
+class Solution{
+    public int[] sortByBits(int arr)
+    {
+        Arrays.sort(arr, (a,b) -> {
+            int countA = countBit(a);
+            int countB = countBit(b);
+
+            if(countA == countB){
+                return Integer.compare(a, b);
+            }
+
+            return Integer.compare(countA, countB);
+        });
+
+        return arr;
+    }
+
+    private int countBit(int n){
+
+        int count =0;
+        while(n!=0)
+        {
+            if((n&1)==1)
+            count++;
+
+            n>>1;
+        }
+    }
+}

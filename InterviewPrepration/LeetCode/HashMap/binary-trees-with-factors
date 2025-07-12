@@ -1,0 +1,30 @@
+class Solution {
+    int MOD = 1_000_000_007;  // Properly defining MOD as an integer
+
+    public int numFactoredBinaryTrees(int[] arr) {
+        int n = arr.length;
+        Arrays.sort(arr); // Sort the array
+        Map<Integer, Long> map = new HashMap<>(); // Store count of trees
+        long result = 0;
+
+        for (int i = 0; i < n; i++) {
+            int root = arr[i];
+            long count = 1;  // Each number is a tree itself
+
+            for (int j = 0; j < i; j++) {
+                int left_child = arr[j];
+                if (root % left_child == 0) { // Check if it can be a root
+                    int right_child = root / left_child;
+                    if (map.containsKey(right_child)) {
+                        count = (count + (map.get(left_child) * map.get(right_child)) % MOD) % MOD;
+                    }
+                }
+            }
+
+            map.put(root, count);
+            result = (result + count) % MOD;
+        }
+
+        return (int) result;
+    }
+}

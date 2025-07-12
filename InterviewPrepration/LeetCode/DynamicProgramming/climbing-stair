@@ -1,0 +1,31 @@
+class Solution {
+    public int climbStairs(int n) {
+
+       if(n==0)
+       return 0;
+
+       int arr[] = new int[n+1];
+       Arrays.fill(arr, -1);
+
+       int ans = calcuateClimbStairs(n,arr);
+
+       return arr[n];
+    }
+
+    public int calcuateClimbStairs(int n, int[] arr)
+    {
+
+        if(n<=2)
+        {
+            arr[n] = n;
+            return arr[n];
+        }
+
+        if(arr[n]!=-1)
+        {
+            return arr[n];
+        }
+        arr[n] = calcuateClimbStairs(n-1,arr) + calcuateClimbStairs(n-2, arr);
+        return arr[n];
+    }
+}

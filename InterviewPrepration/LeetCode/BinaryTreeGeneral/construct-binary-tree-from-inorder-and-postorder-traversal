@@ -1,0 +1,44 @@
+import java.util.HashMap;
+
+public class Solution {
+    // Map to store the index of each value in the inorder traversal for quick lookup
+    private HashMap<Integer, Integer> inorderMap;
+
+    public TreeNode buildTree(int[] inorder, int[] postorder) {
+        if (inorder == null || postorder == null || inorder.length != postorder.length) {
+            return null;
+        }
+
+        // Initialize the map for quick index lookup
+        inorderMap = new HashMap<>();
+        for (int i = 0; i < inorder.length; i++) {
+            inorderMap.put(inorder[i], i);
+        }
+
+        // Call the helper function to build the tree
+        return buildTreeHelper(postorder, 0, postorder.length - 1, 0, inorder.length - 1);
+    }
+
+    private TreeNode buildTreeHelper(int[] postorder, int postStart, int postEnd, int inStart, int inEnd) {
+        // Base case: if the indices are invalid
+        if (postStart > postEnd || inStart > inEnd) {
+            return null;
+        }
+
+        // The root of the current subtree is the last element in the current postorder segment
+        int rootValue = postorder[postEnd];
+        TreeNode root = new TreeNode(rootValue);
+
+        // Get the index of the root value in the inorder array
+        int rootIndexInInorder = inorderMap.get(rootValue);
+
+        // Calculate the size of the left subtree
+        int leftTreeSize = rootIndexInInorder - inStart;
+
+        // Recursively build the left and right subtrees
+        root.left = buildTreeHelper(postorder, postStart, postStart + leftTreeSize - 1, inStart, rootIndexInInorder - 1);
+        root.right = buildTreeHelper(postorder, postStart + leftTreeSize, postEnd - 1, rootIndexInInorder + 1, inEnd);
+
+        return root;
+    }
+}

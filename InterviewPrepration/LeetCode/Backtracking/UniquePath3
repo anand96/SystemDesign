@@ -1,0 +1,43 @@
+class Solution {
+    public int uniquePathsIII(int[][] grid) {
+        int row = grid.length;
+        int col = grid[0].length;  // Fix column length
+
+        int num_occurance = 0;
+        int start_i = -1, start_j = -1; // Initialize variables
+
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                if (grid[i][j] == 0 || grid[i][j] == 1)
+                    num_occurance++;  // Count empty cells and start cell
+
+                if (grid[i][j] == 1) {
+                    start_i = i;
+                    start_j = j;
+                }
+            }
+        }
+        return dfs(grid, start_i, start_j, num_occurance, 0);
+    }
+
+    private int dfs(int[][] grid, int i, int j, int num_occurrance, int count) {
+        if (i < 0 || j < 0 || i >= grid.length || j >= grid[0].length || grid[i][j] == -1)
+            return 0;  // Out of bounds or obstacle
+
+        if (grid[i][j] == 2) {
+            return (count == num_occurrance) ? 1 : 0; // Check if all squares are visited
+        }
+
+        int temp = grid[i][j];
+        grid[i][j] = -1; // Mark as visited
+
+        int ans = dfs(grid, i + 1, j, num_occurrance, count + 1) +
+                  dfs(grid, i - 1, j, num_occurrance, count + 1) +
+                  dfs(grid, i, j + 1, num_occurrance, count + 1) +
+                  dfs(grid, i, j - 1, num_occurrance, count + 1);
+
+        grid[i][j] = temp; // Restore the grid state
+
+        return ans;
+    }
+}

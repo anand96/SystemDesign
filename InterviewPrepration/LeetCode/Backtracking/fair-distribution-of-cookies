@@ -1,0 +1,32 @@
+
+public class Solution {
+    public int distributeCookies(int[] cookies, int k) {
+        int[] children = new int[k]; // Array to track cookie counts for each child
+        return backtrack(cookies, children, 0, k);
+    }
+
+    private int backtrack(int[] cookies, int[] children, int index, int k) {
+        // Base case: All cookies are distributed
+        if (index == cookies.length) {
+            int maxCookies = 0;
+            for (int c : children) {
+                maxCookies = Math.max(maxCookies, c); // Find the maximum among all children
+            }
+            return maxCookies; // Return the maximum as the unfairness
+        }
+
+        int minUnfairness = Integer.MAX_VALUE;
+
+        // Try giving the current bag of cookies to each child
+        for (int i = 0; i < k; i++) {
+            children[i] += cookies[index]; // Assign cookies to child i
+            minUnfairness = Math.min(minUnfairness, backtrack(cookies, children, index + 1, k)); // Recur
+            children[i] -= cookies[index]; // Backtrack
+
+            // Optimization: If the current child has 0 cookies, skip further recursion
+            if (children[i] == 0) break;
+        }
+
+        return minUnfairness;
+    }
+}

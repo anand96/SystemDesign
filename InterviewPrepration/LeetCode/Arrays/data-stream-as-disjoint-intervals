@@ -1,0 +1,113 @@
+import java.util.*;
+
+class SummaryRanges {
+    Set<Integer> s;
+
+    public SummaryRanges() {
+        s = new TreeSet<>(); // Use TreeSet to maintain sorted order
+    }
+
+    public void addNum(int value) {
+        s.add(value); // Add the value to the set
+    }
+
+    public int[][] getIntervals() {
+        int n = s.size();
+        if (n == 0) {
+            return new int[0][0]; // Return an empty 2D array if the set is empty
+        }
+
+        // Convert the set to an array
+        int[] arr = s.stream().mapToInt(Integer::intValue).toArray();
+        List<int[]> result = new ArrayList<>();
+        int i = 0;
+
+        while (i < n) {
+            int left = arr[i]; // Start of the interval
+
+            // Expand the interval while consecutive numbers are found
+            while (i < n - 1 && arr[i + 1] - arr[i] == 1) {
+                i++;
+            }
+
+            int right = arr[i]; // End of the interval
+            result.add(new int[]{left, right});
+            i++;
+        }
+
+        // Convert the list of intervals back to a 2D array
+        return result.toArray(new int[0][0]);
+    }
+
+    /**
+     * Your SummaryRanges object will be instantiated and called as such:
+     * SummaryRanges obj = new SummaryRanges();
+     * obj.addNum(value);
+     * int[][] param_2 = obj.getIntervals();
+     */
+}
+
+
+O(nlon(n))
+
+
+Using TreeMap
+
+
+class SummaryRanges{
+    private TreeMap<Integer, Integer> intervals;
+
+    public SummaryRanges(){
+        intervals = new TreeMap<>();
+    }
+
+    public void addNum(int value)
+    {
+
+        if(intervals.containsKey(value) || intervals.floorEntry(value)!=null && intervals.floorEntry(value).getValue() >= value)
+        {
+            return;
+        }
+
+        // Find Intervals to merge
+        Integer lowerKey = intervals.floorKey(value);
+        Integer higherKey = intervals.ceilingKey(value);
+
+        boolean mergeLeft = lowerKey != null && intervals.get(lowerKey) + 1 ==value;
+        boolean mergeRight = higherKey != null && higherKey - 1 == value;
+
+        if(mergeLeft && mergeRight)
+        {
+            // Merge both left and right intervals
+            int newStart = lowerKey;
+            int newEnd = intervals.get(higherKey);
+            intervals.put(newStart, newEnd); // Update the left interval
+            intervals.remove(higherKey);   // Remove the right interval
+        }
+        else if(mergeLeft){
+            // Merge with the left interval
+            intervals.put(lowerKey, intervals.get(lowerKey) + 1);
+        }
+        else if (mergeRight) {
+            // Merge with the right interval
+            int newEnd = intervals.get(higherKey);
+            intervals.remove(higherKey);
+            intervals.put(value, newEnd);
+        } else {
+            // Create a new interval
+            intervals.put(value, value);
+        }
+    }
+
+    public int[][] getIntervals(){
+        int result[][] = new int[intervals.size()][2];
+        int index =0;
+
+        for(Map.Entry<Integer, Integer> entry : intervals.entrySet()){
+            result[index][0] = entry.getKey();
+            result[index][1] = entry.getValue();
+            index++;
+        }
+        return result;
+    }
+}

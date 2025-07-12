@@ -1,0 +1,26 @@
+class Solution {
+    public int rob(int[] nums) {
+
+        int n = nums.length;
+        if(n ==0 || nums==null)
+        return 0;
+
+        int ans[] = new int[n];
+        Arrays.fill(ans, -1);
+        return calculate_rob(nums, ans, n-1);
+    }
+    public int calculate_rob(int[] nums, int[] ans, int n)
+    {
+        if(n<0)
+        return 0;
+
+        if(ans[n]!=-1)
+        return ans[n];
+
+        int take = nums[n] + calculate_rob(nums, ans, n-2);
+        int nottake = calculate_rob(nums, ans, n-1);
+
+        ans[n] = Math.max(take,nottake);
+        return ans[n];
+    }
+}

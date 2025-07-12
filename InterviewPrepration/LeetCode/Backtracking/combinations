@@ -1,0 +1,30 @@
+class Solution{
+    private List<List<Integer> result;
+
+    public List<List<Integer>> combine(int n, int k){
+        result = new ArrayList<>();
+
+        if(n==0|| k==0)
+        return result;
+
+        backtrack(1, n, k, new ArrayList<Integer>());
+        return result;
+    }
+
+    private void backtrack(int start, int n, int k, List<Integer> temp)
+    {
+
+        if(k==0)
+        {
+            result.add(new ArrayList<>(temp));
+            return result;
+        }
+
+        for(int i = start; i<=n;i++)
+        {
+            temp.add(i);
+            backtrack(i+1, n, k-1, temp);
+            temp.remove(temp.size()-1);
+        }
+    }
+}

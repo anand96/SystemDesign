@@ -1,0 +1,39 @@
+/*
+1. reverse
+2. map
+3. for(int i =0;i<n;i++)
+{
+    result += mp[nums] %10^9;
+}*/
+
+
+class Solution {
+    int MOD = 1_000_000_007;  // Defining MOD as an integer
+
+    public int reverse(int n) {
+        int r = 0, d;
+        while (n != 0) {
+            d = n % 10;
+            r = r * 10 + d;
+            n = n / 10;
+        }
+        return r;
+    }
+
+    public int countNicePairs(int[] nums) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int n = nums.length;
+        int result = 0;
+
+        for (int i = 0; i < n; i++) {
+            nums[i] = nums[i] - reverse(nums[i]); // Transform nums[i] into its difference
+        }
+
+        for (int i = 0; i < n; i++) {
+            result = (result + map.getOrDefault(nums[i], 0)) % MOD;
+            map.put(nums[i], map.getOrDefault(nums[i], 0) + 1);
+        }
+
+        return result; // Return result without +1
+    }
+}

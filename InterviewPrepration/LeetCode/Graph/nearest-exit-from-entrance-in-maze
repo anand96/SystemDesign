@@ -1,0 +1,47 @@
+import java.util.*;
+
+class Solution {
+    public int nearestExit(char[][] maze, int[] entrance) {
+        int m = maze.length;
+        int n = maze[0].length;
+        boolean visited[][] = new boolean[m][n];
+        Queue<int[]> que = new LinkedList<>();
+
+        que.offer(new int[]{entrance[0], entrance[1]});
+        visited[entrance[0]][entrance[1]] = true;
+
+        int dx[] = {-1, 0, 0, 1};
+        int dy[] = {0, -1, 1, 0};
+        int level = 0; // Used to track the number of moves
+
+        while (!que.isEmpty()) {
+            int cap = que.size();
+
+            while (cap-- > 0) {
+                int temp[] = que.poll();
+                int x = temp[0];
+                int y = temp[1];
+
+                for (int idx = 0; idx < 4; idx++) {
+                    int x1 = x + dx[idx];
+                    int y1 = y + dy[idx];
+
+                    // Check if the new position is within bounds and not visited
+                    if (x1 >= 0 && x1 < m && y1 >= 0 && y1 < n && !visited[x1][y1] && maze[x1][y1] != '+') {
+                        // If it's an exit (not entrance), return the distance
+                        if ((x1 == 0 || x1 == m - 1 || y1 == 0 || y1 == n - 1) &&
+                            (x1 != entrance[0] || y1 != entrance[1])) {
+                            return level + 1;
+                        }
+
+                        que.offer(new int[]{x1, y1});
+                        visited[x1][y1] = true;
+                    }
+                }
+            }
+            level++;
+        }
+
+        return -1; // No exit found
+    }
+}

@@ -1,0 +1,94 @@
+// class SmallestInfiniteSet {
+//     boolean[] num;
+//     int i;
+//     public SmallestInfiniteSet() {
+//         num = new boolean[1001];
+//         Arrays.fill(num, true);
+//         i =1;
+//     }
+
+//     public int popSmallest() {
+//         int result =i;
+//         num[i] =false;
+//         for(int j = i+1;j<1001;j++)
+//         {
+//             if(num[j]==true)
+//             {    i = j;
+//                 break;
+//             }
+//         }
+//         return result;
+//     }
+
+//     public void addBack(int n) {
+//         num[n] = true;
+//         if(n < i)
+//         {
+//             i=n;
+//         }
+//     }
+// }
+
+
+// class SmallestInfiniteSet {
+//      int currSmallest;
+//      HashSet<Integer> st;
+//      PriorityQueue<Integer> pq;
+//      public SmallestInfiniteSet() {
+//         currSmallest = 1;
+//         pq = new PriorityQueue<>();
+//         st = new HashSet<>();
+//      }
+
+//      public int popSmallest() {
+//         int result;
+//         if(!pq.isEmpty())
+//         {
+//             result = pq.poll();
+//             st.remove(result);
+//         }
+//         else{
+//             result = currSmallest;
+//             currSmallest+=1;
+//         }
+//         return result;
+//      }
+
+//      public void addBack(int num) {
+//         if(num >= currSmallest || st.contains(num))
+//             return;
+//         st.add(num);
+//         pq.add(num);
+
+//      }
+//  }
+
+
+ class SmallestInfiniteSet {
+     int currSmallest;
+     TreeSet<Integer> st;
+     public SmallestInfiniteSet() {
+        currSmallest = 1;
+        st = new TreeSet<>();
+     }
+
+     public int popSmallest() {
+        int result;
+        if(!st.isEmpty())
+        {
+            result = st.first();
+            st.remove(result);
+        }
+        else{
+            result = currSmallest;
+            currSmallest+=1;
+        }
+        return result;
+     }
+
+     public void addBack(int num) {
+        if(num >= currSmallest || st.contains(num))
+            return;
+        st.add(num);
+     }
+ }

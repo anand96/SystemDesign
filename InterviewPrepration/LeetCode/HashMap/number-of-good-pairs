@@ -1,0 +1,57 @@
+// class Solution {
+//     public int numIdenticalPairs(int[] nums) {
+
+//         int n = nums.length;
+//         int result =0;
+
+//         for(int i =0;i<n-1;i++)
+//         {
+//             int num = nums[i];
+//             for(int j=i+1;j<n;j++)
+//             {
+//                 if(nums[i]==nums[j])
+//                 result++;
+//             }
+//         }
+//         return result;
+//     }
+// }
+
+
+// class Solution {
+//     public int numIdenticalPairs(int[] nums) {
+//         int n = nums.length;
+//         HashMap<Integer,Integer> mp = new HashMap<>();
+
+//         for(int num: nums)
+//         {
+//             mp.put(num, mp.getOrDefault(num, 0)+1);
+//         }
+//         int result =0;
+
+//         for(Map.Entry<Integer, Integer> entry : mp.entrySet())
+//         {
+//             int count = entry.getValue();
+//             result += (count*(count-1))/2;
+//         }
+//         return result;
+//     }
+// }
+
+
+
+class Solution {
+    public int numIdenticalPairs(int[] nums) {
+        int n = nums.length;
+        int result =0;
+        HashMap<Integer, Integer> mp = new HashMap<>();
+
+        for(int num : nums)
+        {
+            result += mp.getOrDefault(num, 0);
+            mp.put(num, mp.getOrDefault(num, 0)+1);
+        }
+        return result;
+
+    }
+}

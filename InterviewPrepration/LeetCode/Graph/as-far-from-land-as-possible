@@ -1,0 +1,72 @@
+class Solution {
+    public int maxDistance(int[][] grid) {
+        int n = grid.length;
+
+         // Edge case: no 0's or no 1's in the grid
+        boolean hasZero = false;
+        boolean hasOne = false;
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 0) {
+                    hasZero = true;
+                }
+                if (grid[i][j] == 1) {
+                    hasOne = true;
+                }
+            }
+        }
+
+        if (!hasZero || !hasOne) {
+            return -1; // No valid distance
+        }
+
+        boolean visited[][] = new boolean[n][n];
+        Queue<Pair<Integer, Integer>> que = new LinkedList<>();
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 1) {
+                    visited[i][j] = true;
+                    que.offer(new Pair<>(i, j));
+                }
+            }
+        }
+
+        int dx[] = {0, -1, 1, 0};
+        int dy[] = {-1, 0, 0, 1};
+
+        while (!que.isEmpty()) {
+            int l = que.size();
+            for (int k = 0; k < l; k++) {
+                // Poll once and store in a variable
+                Pair<Integer, Integer> pair = que.poll();
+                int x = pair.getKey();
+                int y = pair.getValue();
+
+                for (int idx = 0; idx < 4; idx++) {
+                    int x1 = x + dx[idx];
+                    int y1 = y + dy[idx];
+
+                    if (x1 >= 0 && x1 < n && y1 >= 0 && y1 < n) {
+                        if (grid[x1][y1] == 0 && !visited[x1][y1]) {
+                            que.offer(new Pair<>(x1, y1));
+                            grid[x1][y1] = grid[x][y] + 1;
+                            visited[x1][y1] = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        int ans = 0;
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                ans = Math.max(ans, grid[i][j]);
+            }
+        }
+
+        return  ans-1;
+    }
+}

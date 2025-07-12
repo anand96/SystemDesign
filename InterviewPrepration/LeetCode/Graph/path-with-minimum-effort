@@ -1,0 +1,100 @@
+//{ Driver Code Starts
+import java.io.*;
+import java.util.*;
+
+class IntMatrix {
+    public static int[][] input(BufferedReader br, int n, int m) throws IOException {
+        int[][] mat = new int[n][];
+
+        for (int i = 0; i < n; i++) {
+            String[] s = br.readLine().trim().split(" ");
+            mat[i] = new int[s.length];
+            for (int j = 0; j < s.length; j++) mat[i][j] = Integer.parseInt(s[j]);
+        }
+
+        return mat;
+    }
+
+    public static void print(int[][] m) {
+        for (var a : m) {
+            for (int e : a) System.out.print(e + " ");
+            System.out.println();
+        }
+    }
+
+    public static void print(ArrayList<ArrayList<Integer>> m) {
+        for (var a : m) {
+            for (int e : a) System.out.print(e + " ");
+            System.out.println();
+        }
+    }
+}
+
+class GFG {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int t;
+        t = Integer.parseInt(br.readLine());
+        while (t-- > 0) {
+
+            int rows;
+            rows = Integer.parseInt(br.readLine());
+
+            int columns;
+            columns = Integer.parseInt(br.readLine());
+
+            int[][] heights = IntMatrix.input(br, rows, columns);
+
+            Solution obj = new Solution();
+            int res = obj.MinimumEffort(rows, columns, heights);
+
+            System.out.println(res);
+
+System.out.println("~");
+}
+    }
+}
+
+// } Driver Code Ends
+
+class Solution {
+    static class Cell {
+        int x, y, effort;
+        Cell(int x, int y, int effort) {
+            this.x = x;
+            this.y = y;
+            this.effort = effort;
+        }
+    }
+
+    public int MinimumEffort(int rows, int cols,int[][] heights) {
+
+        int[][] efforts = new int[rows][cols];
+        for (int[] row : efforts) Arrays.fill(row, Integer.MAX_VALUE);
+
+        int[][] directions = {{0,1}, {1,0}, {0,-1}, {-1,0}};
+        PriorityQueue<Cell> pq = new PriorityQueue<>(Comparator.comparingInt(a -> a.effort));
+
+        pq.offer(new Cell(0, 0, 0));
+        efforts[0][0] = 0;
+
+        while (!pq.isEmpty()) {
+            Cell cell = pq.poll();
+            int x = cell.x, y = cell.y, effort = cell.effort;
+
+            if (x == rows - 1 && y == cols - 1) return effort;
+
+            for (int[] d : directions) {
+                int nx = x + d[0], ny = y + d[1];
+                if (nx >= 0 && ny >= 0 && nx < rows && ny < cols) {
+                    int newEffort = Math.max(effort, Math.abs(heights[nx][ny] - heights[x][y]));
+                    if (newEffort < efforts[nx][ny]) {
+                        efforts[nx][ny] = newEffort;
+                        pq.offer(new Cell(nx, ny, newEffort));
+                    }
+                }
+            }
+        }
+        return 0;
+    }
+}

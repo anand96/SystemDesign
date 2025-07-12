@@ -1,0 +1,89 @@
+/*
+Intuition check the diagonals, right and left recurssively for
+max number of 1s.
+
+
+solve(int i, int j, int grid)
+
+if(grid[i][j]==0)
+return 0;
+
+right = solve(i, j+1, grid)
+below = solve(i+1, j, grid);
+diag = solve(i+1,j+1, grid)
+
+return 1 + min(right, diag, below);
+
+*/
+
+
+class Solution {
+    int m;
+    int n;
+    public int solve(int i,int j, int[][] matrix, int[][] dp)
+    {
+        if(i<0||i>=m||j<0||j>=n||matrix[i][j]==0)
+            return 0;
+
+        if(dp[i][j]!=-1)
+            return dp[i][j];
+
+
+        int right = solve(i+1,j, matrix, dp);
+        int bottom = solve(i,j+1, matrix, dp);
+        int diag = solve(i+1, j+1, matrix, dp);
+
+        return dp[i][j] = 1 + Math.min(right, Math.min(bottom, diag));
+    }
+    public int countSquares(int[][] matrix) {
+        m = matrix.length;
+        n = matrix[0].length;
+        int result =0;
+
+        int dp[][] = new int[m][n];
+
+        for(int i =0;i<m;i++)
+            Arrays.fill(dp[i],-1)
+
+        for(int i=0;i<m;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                result+= solve(i,j, matrix, dp);
+            }
+        }
+        return result;
+    }
+}
+
+
+
+// code with tabulation
+
+
+class solution{
+    public int countSquares(int[][] matrix) {
+        int m = matrix.length;
+        int n = matrix[0].length;
+
+        int result[][] = new result[m][n];
+
+        for(int i=0;i<m;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                if(i==0||j==0)
+                {
+                    res[i][j] = matrix[i][j];
+                }
+                else{
+                    if(grid[i][j]==1)
+                    {
+                        res[i][j] = 1 + Math.min(result[i-1][j], Math.min(result[i-1][j-1], result[i][j-1]));
+                    }
+                }
+            }
+        }
+        return result[m-1][n-1];
+    }
+}

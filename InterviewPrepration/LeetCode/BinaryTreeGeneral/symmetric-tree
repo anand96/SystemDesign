@@ -1,0 +1,27 @@
+class Solution {
+    public boolean check(TreeNode p,TreeNode q){
+        if(p==null && q==null) return true;
+        if(p==null || q==null) return false;
+
+        return (p.val==q.val && check(p.left,q.right) && check(p.right,q.left));
+    }
+    public boolean isSymmetric(TreeNode root) {
+        if(root==null) return true;
+        return check(root.left,root.right);
+
+    }
+}
+
+
+To check if a tree is symmetric, think of folding it down the middle. If the left side is a mirror image of the right side, then the tree is symmetric.
+
+For every node on the left, there should be a matching node on the right with the same value, and their children should also be flipped and symmetric. If at any point the nodes or their children don't match, the tree is not symmetric.
+
+Approach
+Handles base cases:
+-Returns true if both nodes are null.
+-Returns false if only one node is null.
+-Checks the current node values (p.val == q.val).
+-Recursively compares the left and right children for symmetry:
+-Left subtree of p vs. right subtree of q.
+-Right subtree of p vs. left subtree of q.

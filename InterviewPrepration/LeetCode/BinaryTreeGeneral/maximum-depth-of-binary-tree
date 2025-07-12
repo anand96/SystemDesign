@@ -1,0 +1,35 @@
+public class TreeNode{
+    int val;
+    TreeNode left;
+    TreeNode right;
+    TreeNode(){}
+    TreeNode(int val){
+        this.val = val;
+    }
+    TreeNode(int val, TreeNode left, TreeNode right){
+        this.val =val;
+        this.left = left;
+        this.right = right;
+    }
+}
+
+class Solution{
+    private int ans;
+    public int maxDepth(TreeNode root){
+        if(root == null)
+        return 0;
+
+        int size = calculate(root);
+        return size;
+    }
+    private int calculate(TreeNode root)
+    {
+        if(root ==null)
+            return 0;
+
+        int left_size = calculate(root.left);
+        int right_size = calculate(root.right);
+
+        return left_size > right_size ? left_size + 1 : right_size + 1;
+    }
+}

@@ -1,0 +1,50 @@
+import java.util.*;
+
+class Solution {
+    public int minMutation(String startGene, String endGene, String[] bank) {
+
+        Set<String> bankSet = new HashSet<>(Arrays.asList(bank));
+        Queue<String> q = new LinkedList<>();
+        Set<String> visited = new HashSet<>();
+
+        // Add the start gene to the queue and visited set
+        q.offer(startGene);
+        visited.add(startGene);
+
+        int level = 0;
+
+        while (!q.isEmpty()) {
+            int size = q.size(); // Number of elements at the current level
+
+            // Process all nodes at the current level
+            for (int i = 0; i < size; i++) {
+                String curr = q.poll();
+
+                // If the current gene is the end gene, return the level
+                if (curr.equals(endGene)) {
+                    return level;
+                }
+
+                // Try all possible mutations (A, C, G, T) at each position
+                for (char ch : "ACGT".toCharArray()) {
+                    for (int j = 0; j < curr.length(); j++) {
+                        // Skip if the mutation does not change the gene
+                        if (curr.charAt(j) == ch) continue;
+
+                        // Create a new mutated gene
+                        String neighbour = curr.substring(0, j) + ch + curr.substring(j + 1);
+
+                        // If the mutated gene is in the bank and not visited, add it to the queue
+                        if (bankSet.contains(neighbour) && !visited.contains(neighbour)) {
+                            visited.add(neighbour);
+                            q.offer(neighbour);
+                        }
+                    }
+                }
+            }
+            level++;
+        }
+
+        return -1; // If no valid mutation path is found
+    }
+}

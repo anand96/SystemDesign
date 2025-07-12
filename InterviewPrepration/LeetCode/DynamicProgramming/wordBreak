@@ -1,0 +1,75 @@
+    Example 1:
+
+    Input: s = "leetcode", wordDict = ["leet","code"]
+    Output: true
+    Explanation: Return true because "leetcode" can be segmented as "leet code".
+    Example 2:
+
+    Input: s = "applepenapple", wordDict = ["apple","pen"]
+    Output: true
+    Explanation: Return true because "applepenapple" can be segmented as "apple pen apple".
+    Note that you are allowed to reuse a dictionary word.
+    Example 3:
+
+    Input: s = "catsandog", wordDict = ["cats","dog","sand","and","cat"]
+    Output: false
+
+class Solution{
+
+    public boolean wordBreak(String s, List<String> wordDict){
+
+        Set<String> wordSet = new HashSet<>(wordDict);
+        int n = s.length();
+
+        boolean[] dp = new boolean[n+1];
+        dp[0] = true;
+
+        for(int i=1;i<=n;i++)
+        {
+            for(int j =0;j<i;j++)
+            {
+                if(dp[j] && wordSet.contains(s.substring(j,i))){
+                    dp[i] =true;
+                    break;
+                }
+            }
+        }
+        return dp[n];
+    }
+
+
+
+
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        Set<String> wordSet = new HashSet<>(wordDict); // Use HashSet for O(1) lookup
+        Map<Integer, Boolean> memo = new HashMap<>(); // Memoization map
+        return canBreak(s, 0, wordSet, memo);
+    }
+
+    private boolean canBreak(String s, int start, Set<String> wordSet, Map<Integer, Boolean> memo) {
+        // If we've reached the end of the string, return true
+        if (start == s.length()) {
+            return true;
+        }
+
+        // If this subproblem has already been solved, return the result
+        if (memo.containsKey(start)) {
+            return memo.get(start);
+        }
+
+        // Try every possible end index for the substring s[start:end]
+        for (int end = start + 1; end <= s.length(); end++) {
+            String substring = s.substring(start, end);
+            // If the substring is in the dictionary and the remaining string can be segmented
+            if (wordSet.contains(substring) && canBreak(s, end, wordSet, memo)) {
+                memo.put(start, true);
+                return true;
+            }
+        }
+
+        // If no valid segmentation is found, memoize and return false
+        memo.put(start, false);
+        return false;
+    }
+}

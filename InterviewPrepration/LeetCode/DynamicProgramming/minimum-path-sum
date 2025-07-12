@@ -1,0 +1,22 @@
+class Solution {
+    public int minPathSum(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+
+        return countPath(grid,m-1, n-1,new int[m][n]);
+    }
+
+    public int countPath(int[][] grid,int m,int n,int[][] dp)
+    {
+        if(m==0 && n==0)
+        return grid[m][n];
+
+        if(m<0 || n<0)
+        return Integer.MAX_VALUE;
+
+        if(dp[m][n]!=0)
+        return dp[m][n];
+
+        return dp[m][n] = grid[m][n] + Math.min(countPath(grid,m-1,n,dp), countPath(grid,m,n-1,dp));
+    }
+}

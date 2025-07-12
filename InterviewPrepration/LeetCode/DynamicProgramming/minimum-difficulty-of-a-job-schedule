@@ -1,0 +1,61 @@
+concept
+idx =0
+for(i =idx, i<=n-d;i++)
+{
+    maxD = maxD(maxD, nums[i]);
+    result = maxD + solve(d-1, i+1);
+    finalResult += min(finalResult, result)
+}
+
+Memoization
+
+dp[job][days]
+
+
+// Recurssion
+
+class Solution {
+    private int[][] dp;
+    public int minDifficulty(int[] jobDifficulty, int d) {
+
+        dp = new int[301][11];
+
+        int n = jobDifficulty.length;
+        if(n<d)
+        return -1;
+        for(int i=0;i<dp.length;i++)
+        Arrays.fill(dp[i], -1);
+
+        return solve(jobDifficulty, n,0,d);
+    }
+
+    private int solve(int[] jd, int n, int ind, int d)
+    {
+        // If there is only 1 day left
+        if(d==1)
+        {
+            int maxD = jd[ind];
+            for(int i = ind;i<n;i++)
+            {
+                maxD = Math.max(maxD, jd[i]);
+            }
+            return maxD;
+        }
+
+        if(dp[ind][d]!=-1)
+        return dp[ind][d];
+
+        int maxD = jd[ind];
+        int finalResult = Integer.MAX_VALUE;
+        for(int i = ind;i<= n-d;i++)
+        {
+            maxD = Math.max(maxD, jd[i]);
+            int result = maxD + solve(jd, n, i+1, d-1);
+            finalResult = Math.min(finalResult, result);
+        }
+        return dp[ind][d] = finalResult;
+    }
+}
+
+
+time complexity =

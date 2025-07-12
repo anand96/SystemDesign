@@ -1,0 +1,56 @@
+class Solution {
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+        if(!wordList.contains(endWord))
+        {
+            return 0;
+        }
+        Queue<String> q = new LinkedList<>();
+        HashMap<String, Boolean> map = new HashMap<>();
+
+        q.offer(beginWord);
+        map.put(beginWord, true);
+        int ans = 0;
+        while(!q.isEmpty())
+        {
+            int size = q.size();
+            for(int i=0;i<size;i++)
+            {
+                String temp = q.poll();
+                System.out.println(temp);
+                for(int j=0;j<wordList.size();j++)
+                {
+                    if(map.get(wordList.get(j))==true)
+                    continue;
+
+                    if(canJump(temp, wordList.get(j)) && wordList.get(j).equals(endWord)&& !wordList.get(j).equals(temp) )
+                    {
+                        return ans++;
+                    }
+                    else if(canJump(temp, wordList.get(j)))
+                    {
+                        q.offer(wordList.get(j));
+                        map.put(wordList.get(j), true);
+                    }
+                }
+            }
+            ans++;
+        }
+        return ans++;
+    }
+
+    boolean canJump(String a, String b)
+    {
+        if(a.length()!=b.length())
+            return false;
+        int diff =0;
+        for(int i=0;i<a.length();i++)
+        {
+            if(a.charAt(i)!=b.charAt(i))
+                diff++;
+
+            if(diff>=2)
+            return false;
+        }
+        return true;
+    }
+}

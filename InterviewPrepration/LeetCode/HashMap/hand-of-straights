@@ -1,0 +1,47 @@
+Example 1:
+
+Input: hand = [1,2,3,6,2,3,4,7,8], groupSize = 3
+Output: true
+Explanation: Alice's hand can be rearranged as [1,2,3],[2,3,4],[6,7,8]
+Example 2:
+
+Input: hand = [1,2,3,4,5], groupSize = 4
+Output: false
+Explanation: Alice's hand can not be rearranged into groups of 4.
+
+
+class Solution {
+    public boolean isNStraightHand(int[] hand, int groupSize) {
+        if (hand.length % groupSize != 0)
+            return false;
+
+        TreeMap<Integer, Integer> map = new TreeMap<>();
+
+        // Count occurrences of each number
+        for (int num : hand) {
+            map.put(num, map.getOrDefault(num, 0) + 1);
+        }
+
+        while (!map.isEmpty()) {
+            int first = map.firstKey(); // Get the smallest available key
+
+            // Try forming a group starting with `first`
+            for (int i = 0; i < groupSize; i++) {
+                int curr = first + i;
+                if (!map.containsKey(curr)) {
+                    return false; // If any required number is missing, return false
+                }
+
+                // Reduce the frequency of the current number
+                map.put(curr, map.get(curr) - 1);
+
+                // If count reaches zero, remove the key from the map
+                if (map.get(curr) == 0) {
+                    map.remove(curr);
+                }
+            }
+        }
+
+        return true;
+    }
+}
